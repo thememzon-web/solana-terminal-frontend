@@ -210,7 +210,7 @@
   height: fit-content;
 }
 .col__body{
-  padding: 14px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -224,7 +224,7 @@
   border: 1px solid rgba(255,255,255,0.07);
   background: rgba(255,255,255,0.02);
   border-radius: 16px;
-  padding: 12px;
+  padding: 11px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.22);
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
@@ -409,3 +409,35 @@
   .brand{ min-width: 170px; }
   .nav{ display: none; }
 }
+
+/* --- FULL WIDTH FIX (force true fullscreen layout) --- */
+.app, .main, .topbar, .topbar__inner, .grid {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.main{
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+/* Make 3 columns always fill available space */
+.grid{
+  grid-template-columns: repeat(3, minmax(380px, 1fr)) !important;
+}
+
+/* If screen is very large, allow wider columns */
+@media (min-width: 1600px){
+  .grid{
+    grid-template-columns: repeat(3, minmax(520px, 1fr)) !important;
+  }
+}
+
+/* If screen is huge, reduce empty space even more */
+@media (min-width: 2000px){
+  .grid{
+    grid-template-columns: repeat(3, minmax(640px, 1fr)) !important;
+  }
+}
+
+
