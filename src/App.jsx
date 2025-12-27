@@ -84,7 +84,7 @@ function PairCard({ p, onCopyCA }) {
   const url = p?.url;
 
   const price = fmtPrice(p?.priceUsd);
-  const liq = fmtUsdCompact(p?.liquidityUsd);
+  const liq = fmtUsdCompact(p?.liquidityUsd ?? 0);
   const v5 = fmtUsdCompact(p?.volume?.m5 ?? 0);
 
   const ch5 = num(p?.priceChange?.m5);
@@ -198,7 +198,7 @@ export default function App() {
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 20000); // 20s per ridurre rate limit
+    const t = setInterval(load, 5000); // 20s per ridurre rate limit
     return () => clearInterval(t);
   }, []);
 
@@ -216,21 +216,26 @@ export default function App() {
   }, [pairs, query]);
 
   // Column splits (UI-first heuristics)
-  const newList = useMemo(() => {
-    return pumpfunAll
-      .slice()
-      .sort((a, b) => (b?.firstSeenAt ?? 0) - (a?.firstSeenAt ?? 0))
-      .slice(0, 22);
-  }, [pumpfunAll]);
+const newList = useMemo(() => {
+  const now = Date.now();
+  const fresh = pumpfunAll
+    .slice()
+    .sort((a, b) => (b?.firstSeenAt ?? 0) - (a?.firstSeenAt ?? 0));
+
+  const last2min = fresh.filter(p => (now - (p.firstSeenAt ?? 0)) <= 2 * 60 * 1000);
+
+  return (last2min.length ? last2min : fresh).slice(0, 22);
+}, [pumpfunAll]);
 
   // “Bonding/Soon” proxy: super early + low liq, slightly active
-  const bondingList = useMemo(() => {
-    return pumpfunAll
-      .slice()
-      .filter(p => (num(p?.liquidityUsd) ?? 0) <= 3500)
-      .sort((a, b) => (b?.volume?.m5 ?? 0) - (a?.volume?.m5 ?? 0))
-      .slice(0, 22);
-  }, [pumpfunAll]);
+const bondingList = useMemo(() => {
+  return pumpfunAll
+    .slice()
+    .filter(p => (num(p?.liquidityUsd) ?? 0) <= 2500)
+    .sort((a, b) => (b?.volume?.m5 ?? 0) - (a?.volume?.m5 ?? 0))
+    .slice(0, 22);
+}, [pumpfunAll]);
+
 
   // Migrated placeholder: for UI now we show “not available yet”
   // Later we’ll implement real pumpfun migrated detection in backend.

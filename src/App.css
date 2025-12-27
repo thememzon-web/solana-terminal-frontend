@@ -34,13 +34,15 @@
   border-bottom: 1px solid var(--border);
 }
 .topbar__inner{
-  max-width: 1320px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;        /* <-- anche qui */
+  margin: 0;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 16px;
 }
+
 .brand{
   display: flex;
   align-items: center;
@@ -162,15 +164,18 @@
 
 /* main grid */
 .main{
-  max-width: 1320px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;        /* <-- toglie il limite che ti taglia */
+  margin: 0;
   padding: 16px;
 }
+
 .grid{
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(320px, 1fr));
   gap: 14px;
   align-items: start;
+  width: 100%;
 }
 
 /* column */
@@ -179,10 +184,12 @@
   background: rgba(255,255,255,0.012);
   border-radius: 18px;
   overflow: hidden;
-  min-height: calc(100vh - 92px);
+  height: calc(100vh - 92px); /* <-- ALTEZZA FISSA, schermo pieno */
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
+
 .col__head{
   padding: 14px;
   border-bottom: 1px solid var(--border);
@@ -208,7 +215,9 @@
   flex-direction: column;
   gap: 10px;
   overflow: auto;
+  min-height: 0;          /* <-- IMPORTANTISSIMO per scroll interno */
 }
+
 
 /* cards */
 .card{
